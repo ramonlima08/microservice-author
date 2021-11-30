@@ -72,9 +72,9 @@ class AuthorController extends Controller
     public function update(Request $request, $author)
     {
         $rules = [
-            'name' => 'required|max:255',
-            'gender' => 'required|max:255|in:male,female',
-            'country' => 'required|max:255',
+            'name' => 'max:255',
+            'gender' => 'max:255|in:male,female',
+            'country' => 'max:255',
         ];
 
         $this->validate($request, $rules);
