@@ -59,17 +59,37 @@ class AuthorController extends Controller
      */
     public function show($author)
     {
-        
+        $author = Author::findOrFail($author);
+
+        return $this->successResponse($author);
     }
 
     /**
      * Update a specific Author
      * @return Illuminate/Http/Response
      * 
-     */
+     */ 
     public function update(Request $request, $author)
     {
+        $rules = [
+            'name' => 'required|max:255',
+            'gender' => 'required|max:255|in:male,female',
+            'country' => 'required|max:255',
+        ];
+
+        $this->validate($request, $rules);
+
+        $author = Author::findOrFail($author);
+
+        $author->fill($request->all());
+
+        if($author->isClean()){
+            $this->errorResponse('Ao menos um campo deve ser alterado', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
         
+        $author->save();
+
+        return $this->successResponse($author);
     }
 
     /**
@@ -79,7 +99,11 @@ class AuthorController extends Controller
      */
     public function destroy($author)
     {
-        
+        $author = Author::findOrFail($author);
+
+        $author->delete();
+
+        return $this->successResponse($author);
     }
     
 }
